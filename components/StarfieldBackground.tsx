@@ -49,7 +49,25 @@ export const StarfieldBackground: React.FC = () => {
         // Stride = 6: [x, y, size, baseAlpha, speed, twinkleOffset]
         const galaxyData = new Float32Array(MAX_GALAXY_STARS * 6);
         const galaxyColorIndices = new Uint8Array(MAX_GALAXY_STARS);
-        const GALAXY_COLORS = ['#4c1d95', '#701a75', '#172554', '#be185d', '#0e7490', '#3b0764'];
+        
+        // Expanded palette: Deep blues, rich purples, and subtle pinks/magentas
+        const GALAXY_COLORS = [
+            '#0f172a', // Slate 900 (Deep Blue/Grey)
+            '#172554', // Blue 950 (Midnight Blue)
+            '#1e1b4b', // Indigo 950 (Deepest Indigo)
+            '#312e81', // Indigo 900
+            '#4338ca', // Indigo 700
+            '#2e1065', // Violet 950 (Deepest Violet)
+            '#4c1d95', // Violet 900
+            '#581c87', // Purple 900
+            '#3b0764', // Purple 950
+            '#701a75', // Fuchsia 900 (Dark Pink/Purple)
+            '#831843', // Pink 900
+            '#9d174d', // Pink 800
+            '#be185d', // Pink 700
+            '#4a044e', // Fuchsia 950
+            '#1e3a8a', // Blue 900
+        ];
 
         // INITIALIZATION
         // 1. Init Warp Stars
