@@ -1,18 +1,17 @@
-
 import { GoogleGenAI } from "@google/genai";
 
 let geminiClient: GoogleGenAI | null = null;
 
 /**
  * Returns a singleton instance of the Gemini client.
- * The API key is sourced strictly from process.env.API_KEY4.
+ * The API key is sourced from process.env.API_KEY5 OR process.env.API_KEY.
  * Public environment variables (NEXT_PUBLIC_*) are intentionally avoided for security.
  */
 function getGeminiClient(): GoogleGenAI {
   if (!geminiClient) {
-    const apiKey = process.env.API_KEY4;
+    const apiKey = process.env.API_KEY5 || process.env.API_KEY;
     if (!apiKey) {
-      throw new Error("Gemini API key is missing. Please ensure secure key injection is available via API_KEY4.");
+      throw new Error("Gemini API key is missing. Please ensure secure key injection is available via API_KEY5 or API_KEY.");
     }
     geminiClient = new GoogleGenAI({ apiKey });
   }

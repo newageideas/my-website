@@ -73,13 +73,11 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, {}>((props, ref) => {
                 }
             }
 
-            // Use process.env.API_KEY4 exclusively as requested.
-            // In the window.aistudio environment, this is injected automatically after selection.
-            const apiKey = process.env.API_KEY4;
+            // robustly handle API_KEY5 (custom) or API_KEY (standard/AI Studio)
+            const apiKey = process.env.API_KEY5 || process.env.API_KEY;
             
             if (!apiKey) {
-                // If we are not in the aistudio environment and no key is present, we must fail gracefully or prompt
-                throw new Error("API Key (API_KEY4) missing. Please configure secure key selection.");
+                throw new Error("API Key (API_KEY5 or API_KEY) missing. Please configure secure key selection.");
             }
 
             const ai = new GoogleGenAI({ apiKey });
