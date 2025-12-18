@@ -13,7 +13,7 @@ export const ParticleHero: React.FC = () => {
         let particlesArray: Particle[] = [];
         
         // Configuration
-        const numberOfParticles = 100; // Increased count for better density
+        const numberOfParticles = 100;
         const mouseRadius = 150;
 
         // Mouse State
@@ -23,14 +23,12 @@ export const ParticleHero: React.FC = () => {
             radius: mouseRadius
         };
 
-        // Resize Canvas
         const handleResize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             init();
         };
 
-        // Track Mouse
         const handleMouseMove = (e: MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
             mouse.x = e.clientX - rect.left;
@@ -42,7 +40,6 @@ export const ParticleHero: React.FC = () => {
             mouse.y = -1000;
         }
 
-        // Particle Class
         class Particle {
             x: number;
             y: number;
@@ -50,9 +47,7 @@ export const ParticleHero: React.FC = () => {
             directionY: number;
             size: number;
             color: string;
-            baseX: number;
-            baseY: number;
-
+            
             constructor() {
                 this.x = Math.random() * canvas!.width;
                 this.y = Math.random() * canvas!.height;
@@ -61,12 +56,9 @@ export const ParticleHero: React.FC = () => {
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
                 
-                // Random galaxy colors
-                const colors = ['#00f3ff', '#ff0099', '#ffffff', '#ffd700'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                
-                this.baseX = this.x;
-                this.baseY = this.y;
+                // Random galaxy colors for particles
+                const particleColors = ['#00f3ff', '#ff0099', '#ffffff', '#ffd700'];
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
             }
 
             draw() {
@@ -92,17 +84,15 @@ export const ParticleHero: React.FC = () => {
                 let distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < mouse.radius) {
-                    // Calculate angle and force
                     const angle = Math.atan2(dy, dx);
                     const force = (mouse.radius - distance) / mouse.radius;
-                    const forceX = Math.cos(angle) * force * 5; // Strength multiplier
+                    const forceX = Math.cos(angle) * force * 5; 
                     const forceY = Math.sin(angle) * force * 5;
 
                     this.x -= forceX;
                     this.y -= forceY;
                 } 
 
-                // Move particle naturally
                 this.x += this.directionX;
                 this.y += this.directionY;
 
@@ -118,18 +108,16 @@ export const ParticleHero: React.FC = () => {
         }
 
         function connect() {
-            let opacityValue = 1;
             for (let a = 0; a < particlesArray.length; a++) {
                 for (let b = a; b < particlesArray.length; b++) {
                     let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
                         + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
                     
-                    // Connection distance threshold
                     if (distance < (canvas!.width / 7) * (canvas!.height / 7) && distance < 20000) {
-                        opacityValue = 1 - (distance / 20000);
+                        const opacityValue = 1 - (distance / 20000);
                         if (!ctx) return;
                         
-                        ctx.strokeStyle = 'rgba(112, 0, 255,' + opacityValue + ')'; // Galaxy violet
+                        ctx.strokeStyle = 'rgba(112, 0, 255,' + opacityValue + ')'; 
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -151,12 +139,10 @@ export const ParticleHero: React.FC = () => {
             connect();
         }
 
-        // Initialize listeners
         window.addEventListener('resize', handleResize);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseout', handleMouseLeave);
         
-        // Setup
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         init();

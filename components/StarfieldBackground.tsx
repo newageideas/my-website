@@ -34,9 +34,6 @@ export const StarfieldBackground: React.FC = () => {
         window.addEventListener('resize', setSize);
 
         // --- PERFORMANCE OPTIMIZATION: TypedArrays ---
-        // Instead of creating thousands of objects, we use flat TypedArrays.
-        // This reduces Garbage Collection overhead and improves cache locality.
-
         const MAX_WARP_STARS = 5000;
         const MAX_GALAXY_STARS = 3000;
 
@@ -52,21 +49,21 @@ export const StarfieldBackground: React.FC = () => {
         
         // Expanded palette: Deep blues, rich purples, and subtle pinks/magentas
         const GALAXY_COLORS = [
-            '#0f172a', // Slate 900 (Deep Blue/Grey)
-            '#172554', // Blue 950 (Midnight Blue)
-            '#1e1b4b', // Indigo 950 (Deepest Indigo)
-            '#312e81', // Indigo 900
-            '#4338ca', // Indigo 700
-            '#2e1065', // Violet 950 (Deepest Violet)
-            '#4c1d95', // Violet 900
-            '#581c87', // Purple 900
-            '#3b0764', // Purple 950
-            '#701a75', // Fuchsia 900 (Dark Pink/Purple)
-            '#831843', // Pink 900
-            '#9d174d', // Pink 800
-            '#be185d', // Pink 700
-            '#4a044e', // Fuchsia 950
-            '#1e3a8a', // Blue 900
+            '#0f172a',
+            '#172554',
+            '#1e1b4b',
+            '#312e81',
+            '#4338ca',
+            '#2e1065',
+            '#4c1d95',
+            '#581c87',
+            '#3b0764',
+            '#701a75',
+            '#831843',
+            '#9d174d',
+            '#be185d',
+            '#4a044e',
+            '#1e3a8a',
         ];
 
         // INITIALIZATION
