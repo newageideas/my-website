@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imanostradamus: Galactic AI Nexus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* EXTREME GALAXY SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050011;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff0099, #00f3ff);
+            border-radius: 5px;
+            border: 2px solid #050011;
+        }
+
+        /* FONT UTILITIES */
+        .font-syncopate { font-family: 'Syncopate', sans-serif; }
+        .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+        
+        /* GALAXY BACKGROUND ANIMATION */
+        @keyframes move-stars {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-2000px); }
+        }
+
+        @keyframes nebula-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes star-loop {
+            0% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        .animate-star-loop {
+            animation: star-loop 4s ease-in-out infinite;
+        }
+
+        .bg-galaxy-moving {
+            background: linear-gradient(-45deg, #120024, #2a003b, #001e3b, #000000);
+            background-size: 400% 400%;
+            animation: nebula-flow 15s ease infinite;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+        }
+
+        .stars {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: 1744px 122px #FFF , 134px 1321px #FFF , 92px 859px #FFF, 1200px 400px #FFF, 500px 900px #FFF, 800px 200px #FFF, 100px 100px #FFF, 1500px 1500px #FFF;
+            animation: move-stars 50s linear infinite;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: -1;
+        }
+        
+        .stars::after {
+            content: " ";
+            position: absolute;
+            top: 2000px;
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: 1744px 122px #FFF , 134px 1321px #FFF , 92px 859px #FFF, 1200px 400px #FFF, 500px 900px #FFF, 800px 200px #FFF, 100px 100px #FFF, 1500px 1500px #FFF;
+        }
+
+        /* TEXT EFFECTS */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 243, 255, 0.6);
+        }
+        
+        .text-glow-gold {
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 0, 153, 0.6);
+        }
+
+        /* GLASSMORPHISM EXTREME */
+        .glass-panel {
+            background: rgba(18, 0, 36, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-panel-neon {
+            background: rgba(18, 0, 36, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.05);
+        }
+
+        /* ANIMATIONS */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-float-delayed {
+            animation: float 7s ease-in-out infinite 2s;
+        }
+
+        @keyframes rotate-3d {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* TAILWIND CONFIG EXTENSION */
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        galaxy: {
+                            base: '#050011',
+                            pink: '#ff0099',
+                            cyan: '#00f3ff',
+                            gold: '#ffd700',
+                            violet: '#7000ff'
+                        }
+                    },
+                    fontFamily: {
+                        syncopate: ['Syncopate', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+  }
+}
+</script>
+</head>
+<body class="bg-galaxy-base text-white overflow-x-hidden selection:bg-galaxy-pink selection:text-white font-rajdhani">
+    <div id="root"></div>
+</body>
+</html>
