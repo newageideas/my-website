@@ -43,7 +43,6 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, {}>((props, ref) => {
                     role: 'model', 
                     text: "AUTHENTICATION SECURED. RE-INITIALIZING PROTOCOLS... 🚀" 
                 }]);
-                // Automatically retry logic could go here, but for now we let the user re-engage
             } catch (e) {
                 console.error("Auth failed", e);
             }
@@ -73,11 +72,11 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, {}>((props, ref) => {
                 }
             }
 
-            // robustly handle API_KEY5 (custom) or API_KEY (standard/AI Studio)
-            const apiKey = process.env.API_KEY5 || process.env.API_KEY;
+            // Standard API Key Usage
+            const apiKey = process.env.API_KEY;
             
             if (!apiKey) {
-                throw new Error("API Key (API_KEY5 or API_KEY) missing. Please configure secure key selection.");
+                throw new Error("API Key missing. Please configure secure key selection.");
             }
 
             const ai = new GoogleGenAI({ apiKey });

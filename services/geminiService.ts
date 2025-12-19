@@ -1,21 +1,15 @@
 import { GoogleGenAI } from "@google/genai";
 
-let geminiClient: GoogleGenAI | null = null;
-
 /**
- * Returns a singleton instance of the Gemini client.
- * The API key is sourced from process.env.API_KEY5 OR process.env.API_KEY.
- * Public environment variables (NEXT_PUBLIC_*) are intentionally avoided for security.
+ * Helper to get a fresh client instance with the latest API key.
+ * We do not cache the client to allow for API key updates during the session.
  */
-function getGeminiClient(): GoogleGenAI {
-  if (!geminiClient) {
-    const apiKey = process.env.API_KEY5 || process.env.API_KEY;
+function getClient(): GoogleGenAI {
+    const apiKey = process.env.API_KEY;
     if (!apiKey) {
-      throw new Error("Gemini API key is missing. Please ensure secure key injection is available via API_KEY5 or API_KEY.");
+      throw new Error("Gemini API key is missing. Please ensure API_KEY is available in your environment.");
     }
-    geminiClient = new GoogleGenAI({ apiKey });
-  }
-  return geminiClient;
+    return new GoogleGenAI({ apiKey });
 }
 
 /**
@@ -26,11 +20,11 @@ export async function analyzeMedia(
   mimeType: string,
   prompt: string
 ) {
-  const client = getGeminiClient();
+  const client = getClient();
 
   try {
       const response = await client.models.generateContent({
-        model: 'gemini-2.5-flash', // Efficient model for media analysis
+        model: 'gemini-2.5-flash', 
         contents: {
             parts: [
                 {
@@ -54,7 +48,7 @@ export async function analyzeMedia(
  * Generates an image based on a text prompt using Gemini.
  */
 export async function generateImage(prompt: string): Promise<string> {
-    const client = getGeminiClient();
+    const client = getClient();
     try {
         const response = await client.models.generateContent({
             model: 'gemini-2.5-flash-image',
