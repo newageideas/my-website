@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useMemo } from 'react';
 
 interface Props {
@@ -8,8 +7,19 @@ interface Props {
 
 export const ServiceModal: React.FC<Props> = ({ onClose, onSelect }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const [sign, setSign] = useState("Aries");
-    const [projectType, setProjectType] = useState("Horoscope Reading");
+    
+    // Form State
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        serviceType: 'Restaurant Video Ads',
+        timeline: 'ASAP (Rush)',
+        budget: '$1,000 - $5,000',
+        description: ''
+    });
+
+    const [formStatus, setFormStatus] = useState<'IDLE' | 'SENDING' | 'SENT'>('IDLE');
 
     useEffect(() => {
         // Trigger fade-in after mount
@@ -22,11 +32,44 @@ export const ServiceModal: React.FC<Props> = ({ onClose, onSelect }) => {
         setTimeout(onClose, 300);
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setIsVisible(false);
-        // Pass a composite string to trigger the chat with context
-        setTimeout(() => onSelect(`${projectType} for ${sign}`), 300);
+        setFormStatus('SENDING');
+
+        // 1. Construct the Email Body
+        const subject = `ORDER: ${formData.serviceType} - ${formData.name}`;
+        const body = `
+OFFICIAL PROJECT REQUEST
+------------------------------------------------
+CLIENT: ${formData.name}
+EMAIL: ${formData.email}
+PHONE: ${formData.phone}
+SERVICE: ${formData.serviceType}
+TIMELINE: ${formData.timeline}
+BUDGET RANGE: ${formData.budget}
+
+MISSION BRIEF:
+${formData.description}
+
+------------------------------------------------
+Sent via Imanostradamus Nexus Interface
+        `.trim();
+
+        // 2. Open Email Client
+        const mailtoLink = `mailto:imamartin81@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoLink;
+
+        // 3. Update UI and Notify Chat
+        setTimeout(() => {
+            setFormStatus('SENT');
+            // Also notify the internal chat bot for immersion
+            onSelect(`${formData.serviceType} for ${formData.name} (Budget: ${formData.budget})`);
+        }, 1500);
     };
 
     useEffect(() => {
@@ -38,7 +81,6 @@ export const ServiceModal: React.FC<Props> = ({ onClose, onSelect }) => {
     }, [onClose]);
 
     // Star generation for the looping background
-    // Memoized to prevent regeneration on user interaction (typing)
     const stars = useMemo(() => Array.from({ length: 40 }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
@@ -75,83 +117,179 @@ export const ServiceModal: React.FC<Props> = ({ onClose, onSelect }) => {
                     ))}
                 </div>
 
-                <div className="p-10 md:p-16 relative z-10">
+                <div className="p-8 md:p-12 relative z-10 max-h-[90vh] overflow-y-auto custom-scrollbar">
                     {/* Header */}
-                    <div className="flex justify-between items-start mb-8">
+                    <div className="flex justify-between items-start mb-6">
                         <div>
-                            <h2 className="font-syncopate text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-galaxy-pink">
-                                ARIES PROTOCOL
+                            <h2 className="font-syncopate text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-galaxy-pink">
+                                INITIATE PROJECT
                             </h2>
-                            <p className="font-rajdhani text-galaxy-cyan text-lg mt-2 tracking-wide">
-                                // ALIGN YOUR BRAND WITH THE STARS
+                            <p className="font-rajdhani text-galaxy-cyan text-sm md:text-base mt-1 tracking-wide">
+                                // SECURE ORDER TERMINAL
                             </p>
                         </div>
-                        <button onClick={handleClose} className="text-white/50 hover:text-galaxy-pink font-bold text-4xl transition-colors">
+                        <button onClick={handleClose} className="text-white/50 hover:text-galaxy-pink font-bold text-3xl transition-colors">
                             &times;
                         </button>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="font-syncopate text-xs text-gray-400">Zodiac Sign</label>
-                                <select 
-                                    value={sign}
-                                    onChange={(e) => setSign(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/10 transition-colors"
-                                >
-                                    <option value="Aries">Aries</option>
-                                    <option value="Taurus">Taurus</option>
-                                    <option value="Gemini">Gemini</option>
-                                    <option value="Cancer">Cancer</option>
-                                    <option value="Leo">Leo</option>
-                                    <option value="Virgo">Virgo</option>
-                                    <option value="Libra">Libra</option>
-                                    <option value="Scorpio">Scorpio</option>
-                                    <option value="Sagittarius">Sagittarius</option>
-                                    <option value="Capricorn">Capricorn</option>
-                                    <option value="Aquarius">Aquarius</option>
-                                    <option value="Pisces">Pisces</option>
-                                </select>
+                    {formStatus === 'SENT' ? (
+                        <div className="flex flex-col items-center justify-center py-12 text-center animate-in fade-in zoom-in duration-500">
+                            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_#22c55e]">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="#22c55e" className="w-10 h-10">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                </svg>
                             </div>
-
-                            <div className="space-y-2">
-                                <label className="font-syncopate text-xs text-gray-400">Service Vector</label>
-                                <select 
-                                    value={projectType}
-                                    onChange={(e) => setProjectType(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/10 transition-colors"
-                                >
-                                    <option value="Horoscope Reading">Cosmic Horoscope Reading</option>
-                                    <option value="Video Ad Campaign">Video Ad Campaign</option>
-                                    <option value="Image Generation">Image Generation</option>
-                                    <option value="Creative Event Film">Creative Event Film</option>
-                                    <option value="Brand Identity">Brand Identity</option>
-                                </select>
-                            </div>
+                            <h3 className="font-syncopate text-2xl text-white font-bold mb-2">TRANSMISSION SENT</h3>
+                            <p className="font-rajdhani text-gray-300">Your order has been encrypted and emailed to HQ.<br/>Check your email client to confirm delivery.</p>
+                            <button 
+                                onClick={handleClose}
+                                className="mt-8 px-8 py-3 bg-galaxy-cyan text-black font-syncopate font-bold text-xs rounded hover:bg-white transition-colors"
+                            >
+                                CLOSE TERMINAL
+                            </button>
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="font-syncopate text-xs text-gray-400">Mission Brief</label>
-                            <textarea 
-                                placeholder="Describe your vision or ask the stars..."
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white font-rajdhani focus:border-galaxy-cyan focus:outline-none focus:bg-white/10 transition-colors h-32 resize-none"
-                            ></textarea>
-                        </div>
-
-                        <button 
-                            type="submit"
-                            className="w-full group relative overflow-hidden rounded-xl bg-gradient-to-r from-galaxy-pink to-galaxy-violet p-[1px]"
-                        >
-                            <div className="relative bg-black/50 backdrop-blur-sm rounded-xl px-8 py-4 transition-all duration-300 group-hover:bg-transparent">
-                                <span className="font-syncopate font-bold text-white text-lg tracking-widest group-hover:scale-105 block transition-transform">
-                                    INITIATE SEQUENCE
-                                </span>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            {/* Row 1: Contact Info */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="space-y-1">
+                                    <label className="font-syncopate text-[10px] text-galaxy-cyan tracking-widest">Client / Company</label>
+                                    <input 
+                                        type="text"
+                                        name="name"
+                                        required
+                                        value={formData.name}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter identification..."
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/5 transition-colors placeholder:text-white/20"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="font-syncopate text-[10px] text-galaxy-cyan tracking-widest">Email Address</label>
+                                    <input 
+                                        type="email"
+                                        name="email"
+                                        required
+                                        value={formData.email}
+                                        onChange={handleInputChange}
+                                        placeholder="contact@example.com"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/5 transition-colors placeholder:text-white/20"
+                                    />
+                                </div>
                             </div>
-                            {/* Button Glow */}
-                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 rounded-xl"></div>
-                        </button>
-                    </form>
+
+                            {/* Row 2: Phone & Timeline */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="space-y-1">
+                                    <label className="font-syncopate text-[10px] text-galaxy-cyan tracking-widest">Phone Number</label>
+                                    <input 
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleInputChange}
+                                        placeholder="+1 (555) 000-0000"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/5 transition-colors placeholder:text-white/20"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="font-syncopate text-[10px] text-galaxy-cyan tracking-widest">Timeline</label>
+                                    <select 
+                                        name="timeline"
+                                        value={formData.timeline}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/5 transition-colors appearance-none"
+                                    >
+                                        <option value="ASAP (Rush)">ASAP (Rush)</option>
+                                        <option value="1-2 Weeks">1-2 Weeks</option>
+                                        <option value="1 Month">1 Month</option>
+                                        <option value="Flexible">Flexible</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Row 3: Service Details */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="space-y-1">
+                                    <label className="font-syncopate text-[10px] text-galaxy-cyan tracking-widest">Target Service</label>
+                                    <select 
+                                        name="serviceType"
+                                        value={formData.serviceType}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/5 transition-colors appearance-none"
+                                    >
+                                        <option value="Restaurant Video Ads">Restaurant Video Ads</option>
+                                        <option value="Bar / Nightlife Promos">Bar / Nightlife Promos</option>
+                                        <option value="Web Design (3D/Futuristic)">Web Design (3D/Futuristic)</option>
+                                        <option value="App Development">App Development</option>
+                                        <option value="AI Image Generation">AI Image Generation</option>
+                                        <option value="Menu Engineering">Menu Engineering (ROI)</option>
+                                        <option value="Brand Identity">Brand Identity</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label className="font-syncopate text-[10px] text-galaxy-cyan tracking-widest">Budget Allocation</label>
+                                    <select 
+                                        name="budget"
+                                        value={formData.budget}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/5 transition-colors appearance-none"
+                                    >
+                                        <option value="Under $1,000">Under $1,000</option>
+                                        <option value="$1,000 - $5,000">$1,000 - $5,000</option>
+                                        <option value="$5,000 - $10,000">$5,000 - $10,000</option>
+                                        <option value="$10,000+">$10,000+</option>
+                                        <option value="Custom / Undefined">Custom / Undefined</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="font-syncopate text-[10px] text-galaxy-cyan tracking-widest">Mission Brief / Details</label>
+                                <textarea 
+                                    name="description"
+                                    required
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                    placeholder="Describe your goals, timeline, and specific requirements..."
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white font-rajdhani focus:border-galaxy-pink focus:outline-none focus:bg-white/5 transition-colors h-24 resize-none placeholder:text-white/20"
+                                ></textarea>
+                            </div>
+
+                            <button 
+                                type="submit"
+                                disabled={formStatus === 'SENDING'}
+                                className="w-full group relative overflow-hidden rounded-xl bg-gradient-to-r from-galaxy-pink to-galaxy-violet p-[1px] mt-4"
+                            >
+                                <div className="relative bg-black/50 backdrop-blur-sm rounded-xl px-8 py-4 transition-all duration-300 group-hover:bg-transparent flex items-center justify-center gap-3">
+                                    {formStatus === 'SENDING' ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                            <span className="font-syncopate font-bold text-white text-sm tracking-widest">
+                                                ESTABLISHING LINK...
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="font-syncopate font-bold text-white text-sm tracking-widest group-hover:scale-105 transition-transform">
+                                                TRANSMIT ORDER VIA EMAIL
+                                            </span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                                            </svg>
+                                        </>
+                                    )}
+                                </div>
+                                {/* Button Glow */}
+                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 rounded-xl"></div>
+                            </button>
+                            
+                            <p className="text-center text-xs text-gray-500 font-rajdhani">
+                                Clicking Transmit will open your default email client with a pre-formatted order request.
+                            </p>
+                        </form>
+                    )}
                 </div>
             </div>
         </div>

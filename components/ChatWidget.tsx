@@ -72,11 +72,11 @@ export const ChatWidget = forwardRef<ChatWidgetHandle, {}>((props, ref) => {
                 }
             }
 
-            // Standard API Key Usage
-            const apiKey = process.env.API_KEY;
+            // Standard API Key Usage with fallback prioritizing Vercel's API_KEY5
+            const apiKey = process.env.API_KEY5 || process.env.API_KEY;
             
             if (!apiKey) {
-                throw new Error("API Key missing. Please configure secure key selection.");
+                throw new Error("API Key missing. Please configure secure key selection or environment variables.");
             }
 
             const ai = new GoogleGenAI({ apiKey });

@@ -2,12 +2,13 @@ import { GoogleGenAI } from "@google/genai";
 
 /**
  * Helper to get a fresh client instance with the latest API key.
- * We do not cache the client to allow for API key updates during the session.
+ * Checks user-specified API_KEY5 first (Vercel), then standard API_KEY.
  */
 function getClient(): GoogleGenAI {
-    const apiKey = process.env.API_KEY;
+    // Prioritize API_KEY5 as explicitly requested for Vercel deployment
+    const apiKey = process.env.API_KEY5 || process.env.API_KEY;
     if (!apiKey) {
-      throw new Error("Gemini API key is missing. Please ensure API_KEY is available in your environment.");
+      throw new Error("Gemini API key is missing. Please ensure API_KEY5 (Vercel) or API_KEY is available.");
     }
     return new GoogleGenAI({ apiKey });
 }
