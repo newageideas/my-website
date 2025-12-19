@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
+// Moved outside to ensure single definition
+const PARTICLE_COLORS = ['#00f3ff', '#ff0099', '#ffffff', '#ffd700'];
+
 export const ParticleHero: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -10,6 +13,7 @@ export const ParticleHero: React.FC = () => {
         if (!ctx) return;
 
         let animationFrameId: number;
+        // eslint-disable-next-line
         let particlesArray: Particle[] = [];
         
         // Configuration
@@ -49,16 +53,15 @@ export const ParticleHero: React.FC = () => {
             color: string;
             
             constructor() {
-                this.x = Math.random() * canvas!.width;
-                this.y = Math.random() * canvas!.height;
+                this.x = Math.random() * (canvas?.width || window.innerWidth);
+                this.y = Math.random() * (canvas?.height || window.innerHeight);
                 // Random speed
                 this.directionX = (Math.random() * 1) - 0.5;
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
                 
                 // Random galaxy colors for particles
-                const particleColors = ['#00f3ff', '#ff0099', '#ffffff', '#ffd700'];
-                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
             }
 
             draw() {
@@ -71,11 +74,13 @@ export const ParticleHero: React.FC = () => {
 
             update() {
                 // Bounce off edges
-                if (this.x > canvas!.width || this.x < 0) {
-                    this.directionX = -this.directionX;
-                }
-                if (this.y > canvas!.height || this.y < 0) {
-                    this.directionY = -this.directionY;
+                if (canvas) {
+                    if (this.x > canvas.width || this.x < 0) {
+                        this.directionX = -this.directionX;
+                    }
+                    if (this.y > canvas.height || this.y < 0) {
+                        this.directionY = -this.directionY;
+                    }
                 }
 
                 // Mouse Repulsion Logic
@@ -108,12 +113,13 @@ export const ParticleHero: React.FC = () => {
         }
 
         function connect() {
+            if (!canvas) return;
             for (let a = 0; a < particlesArray.length; a++) {
                 for (let b = a; b < particlesArray.length; b++) {
                     let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
                         + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
                     
-                    if (distance < (canvas!.width / 7) * (canvas!.height / 7) && distance < 20000) {
+                    if (distance < (canvas.width / 7) * (canvas.height / 7) && distance < 20000) {
                         const opacityValue = 1 - (distance / 20000);
                         if (!ctx) return;
                         

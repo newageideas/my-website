@@ -1,5 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+// --- CONSTANTS (Moved to module scope to prevent re-declaration crashes) ---
+const MAX_WARP_STARS = 5000;
+const MAX_GALAXY_STARS = 3000;
+
+const WARP_COLORS = ['#ff0099', '#00f3ff', '#ffffff'];
+
+// Expanded palette: Deep blues, rich purples, and subtle pinks/magentas
+const GALAXY_COLORS = [
+    '#0f172a',
+    '#172554',
+    '#1e1b4b',
+    '#312e81',
+    '#4338ca',
+    '#2e1065',
+    '#4c1d95',
+    '#581c87',
+    '#3b0764',
+    '#701a75',
+    '#831843',
+    '#9d174d',
+    '#be185d',
+    '#4a044e',
+    '#1e3a8a',
+];
+
 export const StarfieldBackground: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -20,6 +45,8 @@ export const StarfieldBackground: React.FC = () => {
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+        
+        // Optimize context creation
         const ctx = canvas.getContext('2d', { alpha: false });
         if (!ctx) return;
 
@@ -34,38 +61,16 @@ export const StarfieldBackground: React.FC = () => {
         window.addEventListener('resize', setSize);
 
         // --- PERFORMANCE OPTIMIZATION: TypedArrays ---
-        const MAX_WARP_STARS = 5000;
-        const MAX_GALAXY_STARS = 3000;
-
+        
         // WARP STARS DATA STRUCTURE
         // Stride = 4: [x, y, z, colorIndex]
         const warpData = new Float32Array(MAX_WARP_STARS * 4); 
-        const WARP_COLORS = ['#ff0099', '#00f3ff', '#ffffff'];
 
         // GALAXY STARS DATA STRUCTURE
         // Stride = 6: [x, y, size, baseAlpha, speed, twinkleOffset]
         const galaxyData = new Float32Array(MAX_GALAXY_STARS * 6);
         const galaxyColorIndices = new Uint8Array(MAX_GALAXY_STARS);
         
-        // Expanded palette: Deep blues, rich purples, and subtle pinks/magentas
-        const GALAXY_COLORS = [
-            '#0f172a',
-            '#172554',
-            '#1e1b4b',
-            '#312e81',
-            '#4338ca',
-            '#2e1065',
-            '#4c1d95',
-            '#581c87',
-            '#3b0764',
-            '#701a75',
-            '#831843',
-            '#9d174d',
-            '#be185d',
-            '#4a044e',
-            '#1e3a8a',
-        ];
-
         // INITIALIZATION
         // 1. Init Warp Stars
         for (let i = 0; i < MAX_WARP_STARS; i++) {
